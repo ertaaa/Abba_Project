@@ -1,0 +1,890 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MainHome</title>
+	<script SRC=https://code.jquery.com/jquery-3.3.1.js></script>
+	<!-- 이미지 자유이동 및 자유크기 -->
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  	<link rel="stylesheet" href="/resources/demos/style.css">
+	
+  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	
+	
+	<style>
+		body{
+			margin:0;
+			background: #fff;
+		}
+		
+		/*상단*/
+		.topnav {
+  			overflow: hidden;
+  			background-color: #333;
+			position: sticky;
+			top:0;
+			padding:14px;
+			z-index: 300;
+		}
+		.wrap {
+			text-align: center;
+		}
+		
+		.topnav a {
+  			/*float: left;*/
+  			color: #f2f2f2;
+  			text-align: center;
+  			padding: 14px;
+  			text-decoration: none;
+  			font-size: 17px;
+		}
+		
+
+		.topnav a:hover {
+ 			background-color: #ddd;
+  			color: black;
+		}
+		
+		
+		/*메인*/
+		#div_canvas {
+			background-color:#b1b1b1;
+			width:702px;
+			height:702px;
+			margin:15px 5px 15px 15px;
+			float: left;
+		}
+
+		#canvas{
+			background-color:#fff;
+			width:700px;
+			height:495px;
+			/*margin:15px 5px 15px 15px;*/
+			margin: 102.5px 0 0 0;
+			border: 1px solid #363636;
+			float: left;
+		}
+		
+		section{
+			max-width: 1300px;
+			margin: 0 auto;
+		}
+		
+		.LRBtn{
+			display: inline-block;
+			margin: 15px 5px;
+			padding-top: 100px;
+			height: 500px;
+		}
+		
+		.LRBtn > ul {
+			padding: 0;
+			margin: 0;
+			text-align: center;
+		}
+		
+		.LRBtn > ul > li{
+			list-style-type: none;
+			margin: 15px 0;
+		}
+		
+		.LRBtn > ul > li > button {
+			width:40px;
+			cursor: pointer;
+			padding: 10px;
+			border: none;
+			border-radius: 10px;
+			font-size: 17px;
+		}
+
+		#horizontal > img, #vertical > img {
+			margin-top: 2.5px;
+		}
+		
+		.bb > img {
+			width:10px;
+			margin:2px auto;
+			display: block;
+		}
+		
+		nav {
+  			float: right;
+  			width: 500px;
+  			height: 700px;
+			margin: 15px 15px 15px 5px;
+  			background-color: #F1F1F1;
+			border: 1px solid #ccc;
+		}
+		
+		
+		/* Style the tab */
+		.tab {
+  			overflow: hidden;
+  			border-bottom: 1px solid #ccc;
+  			background-color: #f1f1f1;
+		}
+		
+		#tabC{
+			overflow-y: scroll;
+			overflow-x: hidden;
+			height: 645px;
+		}
+
+		/* Style the buttons inside the tab */
+		.tab button {
+  			background-color: inherit;
+  			float: left;
+  			border: none;
+  			outline: none;
+  			cursor: pointer;
+  			padding: 14px 15px;
+  			transition: 0.3s;
+  			font-size: 15.3px;
+		}
+		
+
+		/* Change background color of buttons on hover */
+		.tab button:hover {
+ 			 background-color: #ddd;
+		}
+
+		/* Create an active/current tablink class */
+		.tab button.active {
+ 			 background-color: #ccc;
+		}
+
+		/* Style the tab content */
+		.tabcontent {
+  			display: none;
+  			padding: 12px 12px;
+  			border-top: none;
+			height: 100%;
+		}
+		
+		.wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+			border-radius: 5px;
+        }
+
+        .wrapper > div {
+            border: 2px solid #ffa94d;
+            border-radius: 5px;
+            background-color: #fff;
+            padding: 7px;
+            color: #d9480f;
+			cursor: pointer;
+			text-align: center;
+        }
+		
+		.wrapper > label {
+			border: 2px solid #ffa94d;
+            border-radius: 5px;
+            background-color: #fff;
+            padding: 7px;
+            color: #d9480f;
+			cursor: pointer;
+			text-align: center;
+		}
+		
+		
+		.wrapper > div > img {
+			margin-bottom: 12px;
+		}
+
+		.mountainClass > img{
+			width:200px;
+		}
+		.sunClass, .moonClass, .humanClass, .houseClass, .treeClass, .wellClass, .snakeClass, .roadClass > img {
+			width:120px;
+		}
+
+		label > img {
+			margin: 0 auto;
+			text-align: center;
+			display: block;
+		}
+
+		
+		section:after {
+  			content: "";
+  			display: table;
+  			clear: both;
+		}
+
+
+		
+		#snackbar {
+		  visibility: hidden;
+		  min-width: 250px;
+		  margin-left: -125px;
+		  background-color: #333;
+		  color: #fff;
+		  text-align: center;
+		  border-radius: 2px;
+		  padding: 16px;
+		  position: fixed;
+		  z-index: 1;
+		  left: 50%;
+		  bottom: 30px;
+		  font-size: 17px;
+		}
+		#snackbar.show {
+		  visibility: visible;
+		  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+		  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+		}
+
+		@-webkit-keyframes fadein {
+		  from {bottom: 0; opacity: 0;} 
+		  to {bottom: 30px; opacity: 1;}
+		}
+
+		@keyframes fadein {
+		  from {bottom: 0; opacity: 0;}
+		  to {bottom: 30px; opacity: 1;}
+		}
+
+		@-webkit-keyframes fadeout {
+		  from {bottom: 30px; opacity: 1;} 
+		  to {bottom: 0; opacity: 0;}
+		}
+
+		@keyframes fadeout {
+		  from {bottom: 30px; opacity: 1;}
+		  to {bottom: 0; opacity: 0;}
+		}
+
+		#result {
+			border: 2px solid #363636;
+			width: 1270px;
+			height: 500px;
+			display: block;
+			margin: 15px auto;
+		}
+
+		#foot {
+			background-color: #666;
+			color:#fff;
+			font-size: 50px;
+			padding: 15px 15px;
+			text-align: center;
+		}
+
+
+		.dropbtn {
+		  background-color: #d7dde9;	/*#3498DB*/
+		  color: #363636;
+		  font-size: 16px;
+		  border: none;
+		  cursor: pointer;
+		  z-index: 1;
+		  
+		}
+
+		.dropbtn:hover, .dropbtn:focus {
+		  background-color: #bcc7dc; /*#2980B9*/
+		}
+
+		.dropdown-content {
+		  display: none;
+		  position: absolute;
+		  background-color: #f1f1f1;
+		  min-width: 160px;
+		  overflow: auto;
+		  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		  z-index: 2;
+		}
+
+		.dropdown-content a {
+		  color: black;
+		  padding: 12px 16px;
+		  text-decoration: none;
+		  display: block;
+		}
+
+		.dropdown a:hover {background-color: #ddd;}
+
+		.show {display: block;}
+
+		.dropdown {
+		  position: relative;
+		  cursor:pointer;
+		  z-index: 2;
+		}
+
+
+
+
+	</style>
+</head>
+
+<body>
+	
+	<div class="topnav" id="myTopnav">
+		<div class="wrap">
+          <a href="#">Home</a>
+          <a href="#">News</a>
+          <a href="#">Contact</a>
+          <a href="#">About</a>
+		</div>
+	</div>
+	
+	<section>
+
+		<div id="div_canvas">
+	  		<div id="canvas"></div>
+		</div>
+
+		<div class="LRBtn">
+			<ul>
+				<li><button type="button" id="horizontal" onclick="orientaction(this)"><img src="img/horizontal.png"></button></li>
+				<li><button type="button" id="vertical" onclick="orientaction(this)"><img src="img/vertical.png"></button></li>
+				<li><button type="button" id="btnGetCheck" class="bb"><img src="img/LeftBtn.png"></button></li>
+				<li><button type="button" id="btnUngetCheck" class="bb"><img src="img/RightBtn.png"></button></li>
+				<li><button type=button id="plus" onclick="plus()">+</button></li>
+				<li><button type=button id="minus" onclick="minus()">-</button></li>
+				<li><button type=button id="right_deg" onclick="angle_deg(this)">오</button></li>
+				<li><button type=button id="left_deg" onclick="angle_deg(this)">왼</button></li>
+				<li><button type="button" id="complete" onclick="complete()">완료</button></li>
+			</ul>
+		</div>
+		
+			
+		<nav>
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'mountain')">산</button>	
+                <button class="tablinks" onclick="openTab(event, 'sun')">해</button>
+                <button class="tablinks" onclick="openTab(event, 'moon')">달</button>
+                <button class="tablinks" onclick="openTab(event, 'river')">강</button>
+                <button class="tablinks" onclick="openTab(event, 'road')">길</button>
+                <button class="tablinks" onclick="openTab(event, 'house')">집</button>
+                <button class="tablinks" onclick="openTab(event, 'tree')">나무</button>
+                <button class="tablinks" onclick="openTab(event, 'human')">사람</button>
+                <button class="tablinks" onclick="openTab(event, 'well')">우물</button>
+                <button class="tablinks" onclick="openTab(event, 'snake')">뱀</button>
+
+            </div>
+			
+			<div id="tabC">
+                <div id="mountain" class="tabcontent">
+                    <div class="wrapper" style="grid-template-columns: repeat(2, 1fr);"></div>
+                </div>
+                <div id="sun" class="tabcontent">
+                    <div class="wrapper"></div> 
+                </div>
+                <div id="moon" class="tabcontent">
+                    <div class="wrapper"></div>
+                </div>
+                <div id="river" class="tabcontent">
+                    <div class="wrapper" style="grid-template-columns: repeat(2, 1fr);"></div>
+                </div>
+                <div id="road" class="tabcontent">
+                    <div class="wrapper"></div>
+                </div>
+                <div id="house" class="tabcontent">
+                    <div class="wrapper"></div>
+                </div>
+                <div id="tree" class="tabcontent">
+                    <div class="wrapper"></div>
+                </div>
+                <div id="human" class="tabcontent">
+                    <div class="wrapper"></div>
+                </div>
+                <div id="well" class="tabcontent">
+                    <div class="wrapper"></div>
+                </div>
+                <div id="snake" class="tabcontent">
+                    <div class="wrapper"></div>
+                </div>
+			</div>
+
+            
+		</nav>
+
+		<div id="snackbar">이미지를 클릭하셨습니다.</div>
+	</section>
+	
+	
+	<footer>
+		<div id="result"></div>
+		<div id="foot">Footer
+			<p id="demo" class="demo" style="visibility: hidden; font-size: xx-small; height: 5px; margin: 0;"></p>
+		</div>
+	</footer>
+	
+</body>
+
+	<script>
+		// canvas 가로,세로 변경
+		function orientaction(e){
+			var c = e.getAttribute("id");
+
+			if(c == "horizontal"){
+				$('#canvas').css({
+					width:"700px",
+					height:"495px",
+					margin: "102.5px 0 0 0",
+					float:"left"
+				});
+			} else if(c == "vertical"){
+				$('#canvas').css({
+					width:"495px",
+					height:"700px",
+					margin: "0 auto",
+					float:"none"
+				});
+			} else {
+				alert("canvas 가로세로 변경 중 오류입니다.");
+			}
+		}
+
+	</script>
+
+
+
+	<script>
+		// 시작 시 탭(산)클릭된 상태로 
+		window.onload = function(){
+			var e = document.getElementsByClassName('tablinks');
+			e[0].click(openTab);
+		}
+	</script>
+
+
+	<script>
+		// 종류 선택 가능한 탭
+        function openTab(evt, tabName) {
+          var i, tabcontent, tablinks;
+
+          tabcontent = document.getElementsByClassName("tabcontent");
+
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+
+          tablinks = document.getElementsByClassName("tablinks");
+
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+
+          document.getElementById(tabName).style.display = "block";
+          evt.currentTarget.className += " active";
+        }
+    </script>
+
+
+    <script>
+    	
+    	var tabop = ["mountain","sun","moon","river","road","house","tree","human","well","snake"];
+    	var ImgArray = [8,6,6,10,9,10,14,10,3,8];	// (산, 해, 달, 강, 길, 집, 나무, 사람, 우물, 뱀)이미지의 개수 
+
+    	// 자동으로 탭에 맞는 이미지 그리드 생성
+    	for(var i in tabop){
+    		var nm = tabop[i];
+    		var nmDiv = $('#'+nm).children('.wrapper');
+    		var ImgArrayLength = ImgArray[i];
+
+    		for(var j=0; j<ImgArrayLength; j++){	// 5가 아닌변수로 각 탭의 이미지 배열length받아와서 계산
+    			$('<label class="'+nm+'Class"><img src="img/'+nm+'/'+nm+''+j+'.png" id="'+nm+'Img'+j+'"/><input type="radio" name="radio_group" value="'+j+'"/></label>').appendTo(nmDiv);
+    		}
+    	}
+
+
+    </script>
+
+    <script>
+    	var ck=-99;	// 같은 종류의 이미지를 넣었는지 체크하는 변수
+		var ckArray = [];
+		ckArray[0] = -1;
+
+		// 이미지 선택 시 같은 탭의 이미지인지 판별 후 canvas에 이미지 추가 못하게 체크
+    	$('input[type=radio]').click(function(){
+			var imgtabID = $(this).closest(".tabcontent").attr('id');
+
+			for(var i=0; i<tabop.length; i++){
+				if(imgtabID == tabop[i]){ck=i;}	// 선택한 이미지의 탭 순서값에 맞는 값을 ck값에 적용
+			}
+    	});	
+
+		// 선택된 이미지를 canvas에 올리는 버튼 클릭 시
+        $('#btnGetCheck').click(function(){
+        	var $radioChecked = $('input[name="radio_group"]:checked');
+            var value = $radioChecked.val();
+            var imgId = $radioChecked.prev().attr('id');
+			var src = $radioChecked.prev().attr("src");
+
+			if(imgId == undefined){
+				alert("이미지를 선택해주세요.");
+			} else {
+
+				if(-1<ck&&ck<=9){		// 탭 안의 이미지를 선택하고 canvas에 넘겼을 때
+					var zz = true;
+
+					for(var i=0; i<=ckArray.length; i++){
+						if(ckArray[i] == ck){zz=false;}
+					}
+
+					if(zz == false){
+						alert("같은 종류의 이미지 존재합니다.");
+					} else if(zz == true){
+						
+
+						// canvas에 이미지 추가
+						$('#canvas').append(
+							'<div class="container" id="'+imgId+'con" style="position: absolute;">'
+								+'<div class="dropdown">'
+									+'<div class="dropbtn" id="'+imgId+'btn" onclick="myFunction(this)" style="display:inline-block;">가족선택</div>'
+									+'<div id="'+imgId+'Dropdown" class="dropdown-content">'
+										+'<a onclick="family(this)">아버지</a>'
+										+'<a onclick="family(this)">어머니</a>'
+										+'<a onclick="family(this)">형/오빠</a>'
+										+'<a onclick="family(this)">누나/언니</a>'
+										+'<a onclick="family(this)">남동생/여동생</a>'
+									+'</div>'
+								+'</div>'
+								+'<img src="'+src+'" id="'+imgId+'" class="canvas2" onmouseover=mouseover(this); onmouseout=mouseout(this); ondblclick=dblclick(this); style="cursor: move; position:absolute; width:200px; top:0;"/>'
+							+'</div>'
+						);
+						// 이미지 자유이동
+						$('#canvas').children('#'+imgId+'con').draggable({ containment: "#canvas", scroll: false });
+						ckArray[ck] = ck;
+
+						var w = document.getElementById(imgId).width;
+						var h = document.getElementById(imgId).height;
+						//alert(w+"/"+h);
+						$('#'+imgId+'con').css({
+							width:w,
+							height:h
+						});
+
+					}
+				} else {
+					alert("알 수 없는 오류입니다.");
+				}
+			}
+
+        });
+
+
+
+
+        // 사용자가 가족선택 버튼을 클릭하면 드롭 다운 컨텐트를 숨기거나 표시하는 것을 토글
+		function myFunction(e) {
+			var xx = e.getAttribute('id');
+			var ne = xx.substring(0,xx.length-3);	// "btn"제거
+		  document.getElementById(ne+'Dropdown').classList.toggle("show");
+		}
+
+		// 사용자가 바깥 쪽을 클릭하면 드롭 다운을 닫음
+		window.onclick = function(event) {
+		  if (!event.target.matches('.dropbtn')) {
+		    var dropdowns = document.getElementsByClassName("dropdown-content");
+
+		    for (var i = 0; i < dropdowns.length; i++) {
+		      var openDropdown = dropdowns[i];
+		      if (openDropdown.classList.contains('show')) {
+		        openDropdown.classList.remove('show');
+		      }
+		    }
+		  }
+		}
+
+		// 드롭다운 가족선택
+		function family(e){
+			var xx = e.parentElement.getAttribute('id');
+			var ne = xx.substring(0,xx.length-8);
+			var te = e.text;
+
+			document.getElementById(ne+"btn").innerHTML = te;
+		}
+
+		
+
+        // 선택된 이미지가 canvas에서 삭제 시 canvas 안에 이미지가 canvas틀을 벗어나지 않게 해야함 // $('').offset({left: , Top: });이용
+
+        // 선택된 이미지 canvas에서 삭제
+        $('#btnUngetCheck').click(function(){
+        	var dt = $('#demo').text();
+        	var myImg = document.getElementById(dt+"con");
+        	var subID = dt.substring(0,3);
+
+        	// 탭 안의 이미지 삭제 못하게
+        	if(myImg.parentElement.nodeName == "LABEL"){
+        		alert("탭 안에 있는 이미지는 삭제할 수 없습니다.");
+        	} else {
+        		del(subID);
+	        	myImg.remove();
+        	}
+        });
+
+        // canvas에 넣은 이미지 삭제할 때 어떤 이미지를 넣었는지 체크하는 배열에서 탭 이미지에 해당하는 이미지를 배열에서 비워줌
+        function del(subID){
+        	if(subID == "mou"){ckArray[0] = undefined;}
+        	else if(subID == "sun"){ckArray[1] = undefined;}
+        	else if(subID == "moo"){ckArray[2] = undefined;}
+        	else if(subID == "riv"){ckArray[3] = undefined;}
+        	else if(subID == "roa"){ckArray[4] = undefined;}
+        	else if(subID == "hou"){ckArray[5] = undefined;}
+        	else if(subID == "tre"){ckArray[6] = undefined;}
+        	else if(subID == "hum"){ckArray[7] = undefined;}
+        	else if(subID == "wel"){ckArray[8] = undefined;}
+        	else if(subID == "sna"){ckArray[9] = undefined;}
+        }
+		
+		// canvas에 올려진 이미지 오버인 시 테두리 생성
+		function mouseover(e){
+			e.style.border = "1px dotted #363636";
+		}
+		// canvas에 올려진 이미지 오버아웃 시 테두리 지움
+		function mouseout(e){
+			e.style.border = "none";
+		}
+		
+		// canvas에 올려진 이미지 클릭 시 클릭된 이미지 id추출
+		$(document).ready(function(){
+			$('#canvas').click(function(e){
+				var id = e.target.getAttribute('id');
+
+				if(id=='canvas'){
+				} else {
+					ttt(id);
+					snackbar(id);
+				}
+			});
+		});
+		var ttt = function(id){
+			document.getElementById("demo").innerHTML = id;
+		}
+
+		// canvas 안에 있는 이미지 클릭 시
+		function snackbar(id){
+			var x = document.getElementById("snackbar");
+			var idck = id.substring(0,3);
+
+			if(idck == "mou"){x.innerHTML = "산 이미지를 클릭하셨습니다.";}
+			else if(idck == "sun"){x.innerHTML = "해 이미지를 클릭하셨습니다.";}
+			else if(idck == "moo"){x.innerHTML = "달 이미지를 클릭하셨습니다.";}
+			else if(idck == "riv"){x.innerHTML = "강 이미지를 클릭하셨습니다.";}
+			else if(idck == "roa"){x.innerHTML = "길 이미지를 클릭하셨습니다.";}
+			else if(idck == "hou"){x.innerHTML = "집 이미지를 클릭하셨습니다.";}
+			else if(idck == "tre"){x.innerHTML = "나무 이미지를 클릭하셨습니다.";}
+			else if(idck == "hum"){x.innerHTML = "사람 이미지를 클릭하셨습니다.";}
+			else if(idck == "wel"){x.innerHTML = "우물 이미지를 클릭하셨습니다.";}
+			else if(idck == "sna"){x.innerHTML = "뱀 이미지를 클릭하셨습니다.";}
+			
+			
+			x.className = "show";
+		  	setTimeout(function(){ x.className = x.className.replace("show", ""); }, 1700);		// 클래스이름을 없애 없어지는 효과를 줌
+		}
+
+
+		// 이미지 크기 증가
+		function plus(){
+			var dt = $('#demo').text();
+			var myImg = document.getElementById(dt);			// 이미지
+			var conimg = document.getElementById(dt+"con");		// 이미지와 드롭다운 감싸는 컨테이너
+			var currWidth = myImg.clientWidth;
+			var currHeight;
+			var conWidth = conimg.clientWidth;
+			var subID = dt.substring(0,3);
+			
+
+			if(myImg.parentElement.nodeName == "LABEL"){
+				alert("캔버스 안의 이미지 클릭 후 이용하세요.");
+			} else {
+				if( (subID == "mou")&& (currWidth>=575) ){
+					max();
+				} else if( ((subID == "sun")||(subID == "moo"))&&(currWidth>=150) ){
+					max();
+				} else if( ((subID == "riv")||(subID == "roa"))&&(currWidth>=350) ){
+					max();
+				} else if( (subID == "hou")&&(currWidth>=195) ){
+					max();
+				} else if( (subID == "tre")&&(currWidth>=220) ){
+					max();
+				} else if( ((subID == "hum")||(subID == "wel"))&&(currWidth>=180) ){
+					max();
+				} else if( (subID == "sna")&&(currWidth>=145) ){
+					max();
+				} else if( (subID == "sun")||(subID == "moo")||(subID == "hum")||(subID == "wel") ){
+					myImg.style.width = (currWidth + 30) + "px";
+					currHeight = myImg.clientHeight;
+					conimg.style.width = (conWidth + 30) + "px";
+					conimg.style.height = (currHeight) + "px";
+				} else {
+					myImg.style.width = (currWidth + 25) + "px";
+					currHeight = myImg.clientHeight;
+					conimg.style.width = (conWidth + 25) + "px";
+					conimg.style.height = (currHeight) + "px";
+				}
+			}
+
+			function max(){
+				alert("최대크기입니다.");
+			}
+		}
+
+		// 이미지 크기 감소
+		function minus(){
+			var dt = $('#demo').text();
+			var myImg = document.getElementById(dt);			// 이미지
+			var conimg = document.getElementById(dt+"con");		// 이미지와 드롭다운 감싸는 컨테이너
+			var currWidth = myImg.clientWidth;
+			var currHeight;
+			var conWidth = conimg.clientWidth;
+			var subID = dt.substring(0,3);
+
+			if(myImg.parentElement.nodeName == "LABEL"){
+				alert("캔버스 안의 이미지 클릭 후 이용하세요.");
+			} else {
+				if( (subID == "mou")&&(currWidth<=300) ){
+		            min();
+		        } else if( ((subID == "sun")||(subID == "moo"))&&(currWidth<=60) ){
+		        	min();
+		        } else if( ((subID == "riv")||(subID == "roa"))&&(currWidth<=150) ){
+		        	min();
+		        } else if( (subID == "hou")&&(currWidth<=75) ){
+		        	min();
+		        } else if( ((subID == "tre")||(subID == "sna"))&&(currWidth<=50) ){
+		        	min();
+		        } else if( ((subID == "hum")||(subID == "wel"))&&(currWidth<=60) ){
+		        	min();
+		        } else if( (subID=="sun")||(subID=="moo")||(subID=="hum")||(subID=="wel") ){
+		            myImg.style.width = (currWidth - 30) + "px";
+					currHeight = myImg.clientHeight;
+					conimg.style.width = (conWidth - 30) + "px";
+					conimg.style.height = (currHeight) + "px";
+		        } else {
+					myImg.style.width = (currWidth - 25) + "px";
+					currHeight = myImg.clientHeight;
+					conimg.style.width = (conWidth - 25) + "px";
+					conimg.style.height = (currHeight) + "px";
+				}
+			}
+
+	        function min(){
+	        	alert("최소크기입니다.");
+	        }
+		}
+		
+    </script>
+
+
+    <script>
+    	var angle = 0;
+    	var an = 0;
+    	// 이미지 회전
+    	function angle_deg(e){
+    		var dt = $('#demo').text();
+
+    		// 가족선택을 누르고 바로 회전을 했을 때 이미지만 회전이 되게끔
+    		if(dt.substring(dt.length-3,dt.length) == "btn"){
+    			dt = dt.substring(0,dt.length-3);
+    		}
+
+			var myImg = document.getElementById(dt);
+    		var eID = e.getAttribute('id');
+
+/*
+    		var Hypotenuse = (Math.sqrt((myImg.width*myImg.width)+(myImg.height*myImg.height)))/2;	// 이미지 중앙에서 꼭지점까지의 거리
+    		var at = Math.atan((myImg.width/2)/(myImg.height/2));
+    		var att = 180-90-(at*180/Math.PI);
+*/
+
+    		if(eID == "right_deg"){
+    			angle += 22.5;
+    			an -= 22.5;
+    		} else if(eID == "left_deg"){
+    			angle -= 22.5;
+    			an += 22.5;
+    		} else {
+    			alert("회전 중 오류입니다.");
+    		}
+
+/*
+    		var an = 90-att-angle;
+    		var ann = (an*Math.PI)/180;		// Math함수 사용 시 degree가 아닌 radian으로 변환하여 사용해야함
+    		var t = Math.cos(ann)*Hypotenuse-(myImg.height/2);
+    		alert(angle+"도 / "+an+" / "+t);
+*/
+
+    		myImg.style.transform = "rotate("+angle+"deg)";
+
+    	}
+    </script>
+
+
+
+
+
+
+
+    <script>
+    	var cLeft, cTop, cWidth, cHeight;
+    	var child = document.getElementById("canvas").children;
+    	var TabImg = [];
+
+
+    	// 완료 버튼 클릭 시 
+    	function complete(){
+    		var con = confirm("완료되었습니까?");
+    		if(con == true){		// 만약 canvas에 각각의 이미지가 다 안들어갔을 경우 con==false; 적용해야함
+    			ComTrue();
+    		} else {
+    			alert("취소");
+    		}
+    	}
+
+
+    	function ComTrue(){
+    		// canvas의 left와 top 위치를 구하고
+    		var x = document.getElementById('canvas').offsetLeft;
+    		var y = document.getElementById('canvas').offsetTop;
+    		var TF = true;	// canvas에 10가지 이미지가 다 들어갔는지
+    		//alert('canvasX : '+(x+1)+' / canvasY : '+(y+1));	// cnavas 좌표, +1은 테두리선
+
+/*
+    		for(var i=0; i<=9; i++){
+    			if(ckArray[i] == undefined){	// 10개 중 이미지가 1개라도 안들어갔을 경우 false 반환
+    				TF = false;
+    			}
+    		}
+
+    		if(TF == false){
+    			alert("선택하지 못한 이미지가 있습니다. 확인해주세요.");
+    		} else {
+    			for(var i=0; i<=9; i++){
+					var can2Child = document.getElementsByClassName('canvas2');
+					var can2_child_id = can2Child[i].getAttribute('id');
+
+					cLeft = can2Child[i].offsetLeft;
+					cTop = can2Child[i].offsetTop;
+					cWidth = can2Child[i].width;
+					cHeight = can2Child[i].height;
+
+		    		// 이미지의 left와 top위치를 구하고 canvas 좌표값을 빼면 본래 위치를 알 수 있다. // -1 은 테두리선 1px 빼준거
+		    		alert("id:"+can2_child_id+" /left: "+(cLeft-x)+"  top: "+(cTop-y)+" / width: "+cWidth+"  height: "+cHeight); 
+		    	}
+    		}
+*/
+			for(var i=0; i<=9; i++){
+				var can2Child = document.getElementsByClassName('canvas2');
+				var can2_child_id = can2Child[i].getAttribute('id');
+
+				cLeft = can2Child[i].offsetLeft;
+				cTop = can2Child[i].offsetTop;
+				cWidth = can2Child[i].width;
+				cHeight = can2Child[i].height;
+
+				// 객체 배열 TabImg[i].push({});로 탭 순서에 맞게 넣어야함
+
+		    	// 이미지의 left와 top위치를 구하고 canvas 좌표값을 빼면 본래 위치를 알 수 있다. // -1 은 테두리선 1px 빼준거
+		    	alert("id: "+can2_child_id+" /left: "+(cLeft-x-1)+"  top: "+(cTop-y-1)+" / width: "+cWidth+"  height: "+cHeight); 
+		    }
+    	}
+    </script>
+</html>
