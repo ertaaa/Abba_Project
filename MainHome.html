@@ -119,7 +119,8 @@
 		
 		/* Style the tab */
 		.tab {
-  			overflow: hidden;
+  			overflow-x: scroll;
+  			white-space: nowrap;
   			border-bottom: 1px solid #ccc;
   			background-color: #f1f1f1;
 		}
@@ -127,13 +128,12 @@
 		#tabC{
 			overflow-y: scroll;
 			overflow-x: hidden;
-			height: 645px;
+			height: 630px;
 		}
 
 		/* Style the buttons inside the tab */
 		.tab button {
   			background-color: inherit;
-  			float: left;
   			border: none;
   			outline: none;
   			cursor: pointer;
@@ -194,14 +194,15 @@
 			margin-bottom: 12px;
 		}
 
-		.mountainClass > img{
+		/*.mountainClass > img{
 			width:200px;
 		}
 		.sunClass, .moonClass, .humanClass, .houseClass, .treeClass, .wellClass, .snakeClass, .roadClass > img {
 			width:120px;
-		}
+		}*/
 
 		label > img {
+			width: 120px;
 			margin: 0 auto;
 			text-align: center;
 			display: block;
@@ -354,54 +355,11 @@
 		
 			
 		<nav>
-            <div class="tab">
-                <button class="tablinks" onclick="openTab(event, 'mountain')">산</button>	
-                <button class="tablinks" onclick="openTab(event, 'sun')">해</button>
-                <button class="tablinks" onclick="openTab(event, 'moon')">달</button>
-                <button class="tablinks" onclick="openTab(event, 'river')">강</button>
-                <button class="tablinks" onclick="openTab(event, 'road')">길</button>
-                <button class="tablinks" onclick="openTab(event, 'house')">집</button>
-                <button class="tablinks" onclick="openTab(event, 'tree')">나무</button>
-                <button class="tablinks" onclick="openTab(event, 'human')">사람</button>
-                <button class="tablinks" onclick="openTab(event, 'well')">우물</button>
-                <button class="tablinks" onclick="openTab(event, 'snake')">뱀</button>
 
-            </div>
+            <div class="tab"></div>
 			
-			<div id="tabC">
-                <div id="mountain" class="tabcontent">
-                    <div class="wrapper" style="grid-template-columns: repeat(2, 1fr);"></div>
-                </div>
-                <div id="sun" class="tabcontent">
-                    <div class="wrapper"></div> 
-                </div>
-                <div id="moon" class="tabcontent">
-                    <div class="wrapper"></div>
-                </div>
-                <div id="river" class="tabcontent">
-                    <div class="wrapper" style="grid-template-columns: repeat(2, 1fr);"></div>
-                </div>
-                <div id="road" class="tabcontent">
-                    <div class="wrapper"></div>
-                </div>
-                <div id="house" class="tabcontent">
-                    <div class="wrapper"></div>
-                </div>
-                <div id="tree" class="tabcontent">
-                    <div class="wrapper"></div>
-                </div>
-                <div id="human" class="tabcontent">
-                    <div class="wrapper"></div>
-                </div>
-                <div id="well" class="tabcontent">
-                    <div class="wrapper"></div>
-                </div>
-                <div id="snake" class="tabcontent">
-                    <div class="wrapper"></div>
-                </div>
-			</div>
+			<div id="tabC"></div>
 
-            
 		</nav>
 
 		<div id="snackbar">이미지를 클릭하셨습니다.</div>
@@ -416,6 +374,34 @@
 	</footer>
 	
 </body>
+
+	<script>
+        
+        var animal =[
+            "bat", "bear", "bird", "cat", "chicken", "cow", "crocodile", "deer", "dog", "duck", "eagle", "elephant",
+            "fish", "fox", "frog", "giraffe", "hippo", "horse", "kangaroo", "lion", "monkey", "mouse", "owl",
+            "pig", "pigeon", "rabbit", "sheep", "snake", "squirrel", "tiger", "turtle", "wolf"
+        ]
+        var ani = [
+            "박쥐", "곰", "새", "고양이", "닭", "소", "악어", "사슴", "개", "오리", "독수리", "코끼리" ,
+    		"물고기", "여우", "개구리", "기린", "하마" ,"말", "캥거루", "사자", "원숭이", "쥐", "부엉이",
+    		"돼지", "비둘기", "토끼", "양", "뱀", "다람쥐", "호랑이", "거북이", "늑대"
+    	]
+
+    	// 탭 생성
+    	for(var i=0; i<animal.length; i++){
+    		$('.tab').append('<button class="tablinks" onclick=openTab(event,"'+animal[i]+'")>'+ani[i]+'</button>');
+    	}
+        
+        // 탭 컨텐츠 담을 틀 생성
+		for(var i=0; i<animal.length; i++){
+			$('#tabC').append(
+				'<div id="'+animal[i]+'" class="tabcontent">'
+					+'<div class="wrapper"></div>'
+				+'</div>');
+		}
+
+    </script>
 
 	<script>
 		// canvas 가로,세로 변경
@@ -479,17 +465,16 @@
 
     <script>
     	
-    	var tabop = ["mountain","sun","moon","river","road","house","tree","human","well","snake"];
-    	var ImgArray = [8,6,6,10,9,10,14,10,3,8];	// (산, 해, 달, 강, 길, 집, 나무, 사람, 우물, 뱀)이미지의 개수 
+    	var ImgArray = [3,4,5,6,4,5,4,4,5,4,3,5,6,3,4,4,3,3,2,3,4,3,4,3,3,3,2,3,2,2,3,3]; 
 
     	// 자동으로 탭에 맞는 이미지 그리드 생성
-    	for(var i in tabop){
-    		var nm = tabop[i];
+    	for(var i in animal){
+    		var nm = animal[i];
     		var nmDiv = $('#'+nm).children('.wrapper');
     		var ImgArrayLength = ImgArray[i];
 
     		for(var j=0; j<ImgArrayLength; j++){	// 5가 아닌변수로 각 탭의 이미지 배열length받아와서 계산
-    			$('<label class="'+nm+'Class"><img src="img/'+nm+'/'+nm+''+j+'.png" id="'+nm+'Img'+j+'"/><input type="radio" name="radio_group" value="'+j+'"/></label>').appendTo(nmDiv);
+    			$('<label class="'+nm+'Class"><img src="img/animal/'+nm+'/'+nm+''+j+'.png" id="'+nm+'Img'+j+'"/><input type="radio" name="radio_group" value="'+j+'"/></label>').appendTo(nmDiv);
     		}
     	}
 
@@ -505,8 +490,8 @@
     	$('input[type=radio]').click(function(){
 			var imgtabID = $(this).closest(".tabcontent").attr('id');
 
-			for(var i=0; i<tabop.length; i++){
-				if(imgtabID == tabop[i]){ck=i;}	// 선택한 이미지의 탭 순서값에 맞는 값을 ck값에 적용
+			for(var i=0; i<animal.length; i++){
+				if(imgtabID == animal[i]){ck=i;}	// 선택한 이미지의 탭 순서값에 맞는 값을 ck값에 적용
 			}
     	});	
 
@@ -521,7 +506,7 @@
 				alert("이미지를 선택해주세요.");
 			} else {
 
-				if(-1<ck&&ck<=9){		// 탭 안의 이미지를 선택하고 canvas에 넘겼을 때
+				if(-1<ck&&ck<=32){		// 탭 안의 이미지를 선택하고 canvas에 넘겼을 때
 					var zz = true;
 
 					for(var i=0; i<=ckArray.length; i++){
@@ -546,7 +531,7 @@
 										+'<a onclick="family(this)">남동생/여동생</a>'
 									+'</div>'
 								+'</div>'
-								+'<img src="'+src+'" id="'+imgId+'" class="canvas2" onmouseover=mouseover(this); onmouseout=mouseout(this); ondblclick=dblclick(this); style="cursor: move; position:absolute; width:200px; top:0;"/>'
+								+'<img src="'+src+'" id="'+imgId+'" class="canvas2" onmouseover=mouseover(this); onmouseout=mouseout(this); ondblclick=dblclick(this); style="cursor: move; position:absolute; width:150px; top:0;"/>'
 							+'</div>'
 						);
 						// 이미지 자유이동
@@ -610,7 +595,7 @@
         $('#btnUngetCheck').click(function(){
         	var dt = $('#demo').text();
         	var myImg = document.getElementById(dt+"con");
-        	var subID = dt.substring(0,3);
+        	var subID = dt.substring(0,dt.length-4);		// "batImg0" -> bat으로 아이디 추출사용 중/ 한 종류의 이미지가 10개 이상 되면 다른거 적용해야함
 
         	// 탭 안의 이미지 삭제 못하게
         	if(myImg.parentElement.nodeName == "LABEL"){
@@ -623,16 +608,10 @@
 
         // canvas에 넣은 이미지 삭제할 때 어떤 이미지를 넣었는지 체크하는 배열에서 탭 이미지에 해당하는 이미지를 배열에서 비워줌
         function del(subID){
-        	if(subID == "mou"){ckArray[0] = undefined;}
-        	else if(subID == "sun"){ckArray[1] = undefined;}
-        	else if(subID == "moo"){ckArray[2] = undefined;}
-        	else if(subID == "riv"){ckArray[3] = undefined;}
-        	else if(subID == "roa"){ckArray[4] = undefined;}
-        	else if(subID == "hou"){ckArray[5] = undefined;}
-        	else if(subID == "tre"){ckArray[6] = undefined;}
-        	else if(subID == "hum"){ckArray[7] = undefined;}
-        	else if(subID == "wel"){ckArray[8] = undefined;}
-        	else if(subID == "sna"){ckArray[9] = undefined;}
+        	for(var i=0; i<animal.length; i++){
+        		if(subID == animal[i]){ckArray[i] = undefined;}
+        	}
+
         }
 		
 		// canvas에 올려진 이미지 오버인 시 테두리 생성
@@ -663,19 +642,11 @@
 		// canvas 안에 있는 이미지 클릭 시
 		function snackbar(id){
 			var x = document.getElementById("snackbar");
-			var idck = id.substring(0,3);
+			var idck = id.substring(0,id.length-4);			// "batImg0" -> bat으로 아이디 추출사용 중/ 한 종류의 이미지가 10개 이상 되면 다른거 적용해야함
 
-			if(idck == "mou"){x.innerHTML = "산 이미지를 클릭하셨습니다.";}
-			else if(idck == "sun"){x.innerHTML = "해 이미지를 클릭하셨습니다.";}
-			else if(idck == "moo"){x.innerHTML = "달 이미지를 클릭하셨습니다.";}
-			else if(idck == "riv"){x.innerHTML = "강 이미지를 클릭하셨습니다.";}
-			else if(idck == "roa"){x.innerHTML = "길 이미지를 클릭하셨습니다.";}
-			else if(idck == "hou"){x.innerHTML = "집 이미지를 클릭하셨습니다.";}
-			else if(idck == "tre"){x.innerHTML = "나무 이미지를 클릭하셨습니다.";}
-			else if(idck == "hum"){x.innerHTML = "사람 이미지를 클릭하셨습니다.";}
-			else if(idck == "wel"){x.innerHTML = "우물 이미지를 클릭하셨습니다.";}
-			else if(idck == "sna"){x.innerHTML = "뱀 이미지를 클릭하셨습니다.";}
-			
+			for(var i=0; i<animal.length; i++){
+				if(idck == animal[i]){x.innerHTML = ani[i]+" 이미지를 클릭하셨습니다."}
+			}
 			
 			x.className = "show";
 		  	setTimeout(function(){ x.className = x.className.replace("show", ""); }, 1700);		// 클래스이름을 없애 없어지는 효과를 줌
