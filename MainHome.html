@@ -346,8 +346,8 @@
 				<li><button type="button" id="vertical" onclick="orientaction(this)"><img src="img/vertical.png"></button></li>
 				<li><button type="button" id="btnGetCheck" class="bb"><img src="img/LeftBtn.png"></button></li>
 				<li><button type="button" id="btnUngetCheck" class="bb"><img src="img/RightBtn.png"></button></li>
-				<li><button type=button id="plus" onclick="plus()">+</button></li>
-				<li><button type=button id="minus" onclick="minus()">-</button></li>
+				<li><button type=button id="plus" onclick="sizing(this)">+</button></li>
+				<li><button type=button id="minus" onclick="sizing(this)">-</button></li>
 				<li><button type=button id="right_deg" onclick="angle_deg(this)">오</button></li>
 				<li><button type=button id="left_deg" onclick="angle_deg(this)">왼</button></li>
 				<li><button type="button" id="complete" onclick="complete()">완료</button></li>
@@ -449,7 +449,8 @@
 				if( (family_num == 0)||(family_num < 0)||(isNaN(family_num)) ){		// 0이거나 0이하거나 숫자가 아닌 경우 계속 물어봄
 					start();
 				} else {		// 0보다 클 경우
-					alert(family_num);
+					alert(family_num+"명으로 입력되었습니다.");
+					ckArray.length = family_num;		// 가족 수 만큼 canvas에 넣을 수 있는 이미지 수 적용
 				}
 			}
 
@@ -503,6 +504,7 @@
     	var ck=-99;	// 같은 종류의 이미지를 넣었는지 체크하는 변수
 		var ckArray = [];
 		ckArray[0] = -1;
+		var k=0;		// 같은 종류의 이미지를 넣을 수 있게하는 변수
 
 		// 이미지 선택 시 같은 탭의 이미지인지 판별 후 canvas에 이미지 추가 못하게 체크
     	$('input[type=radio]').click(function(){
@@ -519,6 +521,7 @@
             var value = $radioChecked.val();
             var imgId = $radioChecked.prev().attr('id');
 			var src = $radioChecked.prev().attr("src");
+			
 
 			if(imgId == undefined){
 				alert("이미지를 선택해주세요.");
@@ -527,21 +530,21 @@
 				if(-1<ck&&ck<=32){		// 탭 안의 이미지를 선택하고 canvas에 넘겼을 때
 					var zz = true;
 
-					for(var i=0; i<=ckArray.length; i++){
+					/*for(var i=0; i<=ckArray.length; i++){		// 추가하려는 이미지 종류가 이미 canvas에 있으면 false
 						if(ckArray[i] == ck){zz=false;}
-					}
+					}*/
 
 					if(zz == false){
 						alert("같은 종류의 이미지 존재합니다.");
-					} else if(zz == true){
+					} else if( (zz == true)&&(k<ckArray.length) ){
 						
 
 						// canvas에 이미지 추가
 						$('#canvas').append(
-							'<div class="container" id="'+imgId+'con" style="position: absolute;" onmouseover=mouseover(this); onmouseout=mouseout(this);>'
+							'<div class="container" id="'+imgId+'_'+k+'con" style="position: absolute;" onmouseover=mouseover(this); onmouseout=mouseout(this);>'
 								+'<div class="dropdown">'
-									+'<div class="dropbtn" id="'+imgId+'btn" onclick="myFunction(this)" style="display:inline-block;">가족선택</div>'
-									+'<div id="'+imgId+'Dropdown" class="dropdown-content">'
+									+'<div class="dropbtn" id="'+imgId+'_'+k+'btn" onclick="myFunction(this)" style="display:inline-block;">가족선택</div>'
+									+'<div id="'+imgId+'_'+k+'Dropdown" class="dropdown-content">'
 										+'<a onclick="family(this)">아버지</a>'
 										+'<a onclick="family(this)">어머니</a>'
 										+'<a onclick="family(this)">형/오빠</a>'
@@ -549,21 +552,24 @@
 										+'<a onclick="family(this)">남동생/여동생</a>'
 									+'</div>'
 								+'</div>'
-								+'<img src="'+src+'" id="'+imgId+'" class="canvas2" style="cursor: move; position:absolute; width:150px; top:0;"/>'
+								+'<img src="'+src+'" id="'+imgId+'_'+k+'" class="canvas2" style="cursor: move; position:absolute; width:150px; top:0;"/>'
 							+'</div>'
 						);
 						// 이미지 자유이동
-						$('#canvas').children('#'+imgId+'con').draggable({ containment: "#canvas", scroll: false });
+						$('#canvas').children('#'+imgId+'_'+k+'con').draggable({ containment: "#canvas", scroll: false });
 						ckArray[ck] = ck;
+						
 
-						var w = document.getElementById(imgId).width;
-						var h = document.getElementById(imgId).height;
+						var w = document.getElementById(imgId+"_"+k).width;
+						var h = document.getElementById(imgId+"_"+k).height;
 						//alert(w+"/"+h);
-						$('#'+imgId+'con').css({
+						$('#'+imgId+'_'+k+'con').css({
 							width:w,
 							height:h
 						});
-
+						k+=1;
+					} else if(k>=ckArray.length){
+						alert("처음 설정한 가족 수를 초과합니다.");
 					}
 				} else {
 					alert("알 수 없는 오류입니다.");
@@ -613,7 +619,7 @@
         $('#btnUngetCheck').click(function(){
         	var dt = $('#demo').text();
         	var myImg = document.getElementById(dt+"con");
-        	var subID = dt.substring(0,dt.length-4);		// "batImg0" -> bat으로 아이디 추출사용 중/ 한 종류의 이미지가 10개 이상 되면 다른거 적용해야함
+        	var subID = dt.substring(0,dt.length-6);		// "batImg0_0" -> bat으로 아이디 추출사용 중/ 한 종류의 이미지가 10개 이상 되면 다른거 적용해야함
 
         	// 탭 안의 이미지 삭제 못하게
         	if(myImg.parentElement.nodeName == "LABEL"){
@@ -621,6 +627,7 @@
         	} else {
         		del(subID);
 	        	myImg.remove();
+	        	k-=1;
         	}
         });
 
@@ -629,7 +636,6 @@
         	for(var i=0; i<animal.length; i++){
         		if(subID == animal[i]){ckArray[i] = undefined;}
         	}
-
         }
 		
 		// canvas에 올려진 이미지 오버인 시 테두리 생성
@@ -646,9 +652,8 @@
 		// canvas에 올려진 이미지 클릭 시 클릭된 이미지 id추출
 		$(document).ready(function(){
 			$('#canvas').click(function(e){
-				var id = e.target.getAttribute('id');
-
-				var drid = id.substring(id.length-3, id.length);
+				var id = e.target.getAttribute('id');		//batImg0_0 이런식으로 추출
+				var drid = id.substring(id.length-3, id.length);		// 가족선택 드롭다운 클릭 시 btn 추출
 
 				if(id=='canvas'){
 				} else if(drid == "btn"){
@@ -665,11 +670,11 @@
 		// canvas 안에 있는 이미지 클릭 시
 		function snackbar(id){
 			var x = document.getElementById("snackbar");
-			var idck = id.substring(0,id.length-4);			// "batImg0" -> bat으로 아이디 추출사용 중/ 한 종류의 이미지가 10개 이상 되면 다른거 적용해야함
+			var idck = id.substring(0,id.length-6);			// "batImg0" -> bat으로 아이디 추출사용 중/ 한 종류의 이미지가 10개 이상 되면 다른거 적용해야함
 			var drid = id.substring(id.length-3, id.length);	// 드롭다운 클릭했을 때도 동물 종류명 뜨게끔
 
 			if(drid == "btn"){
-				idck = id.substring(0,id.length-7);		// 역시 마찬가지로 한 동물의 이미지가 10개 이상되면 다른거 적용해야함
+				idck = id.substring(0,id.length-9);		// 역시 마찬가지로 한 동물의 이미지가 10개 이상되면 다른거 적용해야함
 			}
 			for(var i=0; i<animal.length; i++){
 				if(idck == animal[i]){x.innerHTML = ani[i]+" 이미지를 클릭하셨습니다."}
@@ -679,64 +684,44 @@
 		  	setTimeout(function(){ x.className = x.className.replace("show", ""); }, 1700);		// 클래스이름을 없애 없어지는 효과를 줌
 		}
 
-
-		// 이미지 크기 증가
-		function plus(){
+		// 이미지 크기 증감
+		function sizing(e){
 			var dt = $('#demo').text();
 			var myImg = document.getElementById(dt);			// 이미지
 			var conimg = document.getElementById(dt+"con");		// 이미지와 드롭다운 감싸는 컨테이너
 			var currWidth = myImg.clientWidth;
 			var currHeight;
 			var conWidth = conimg.clientWidth;
-			var subID = dt.substring(0,3);
-			
+			var sizingID = e.getAttribute('id');
+
+
 
 			if(myImg.parentElement.nodeName == "LABEL"){
 				alert("캔버스 안의 이미지 클릭 후 이용하세요.");
-			} else {
+			} else if(sizingID == "plus") {
 				if(currWidth>=475){
 					max();
 				} else {
-					myImg.style.width = (currWidth + 25) + "px";
-					currHeight = myImg.clientHeight;
-					conimg.style.width = (conWidth + 25) + "px";
-					conimg.style.height = (currHeight) + "px";
+					myImg.style.width = (currWidth + 25) + "px";		// +25씩 이미지 가로 증가	(세로는 비율에 맞게 자동적용)
+					currHeight = myImg.clientHeight;					// 컨테이너와 이미지 크기가 같고, 컨테이너 세로크기 적용하기 위해 추출 
+					conimg.style.width = (conWidth + 25) + "px";		// +25씩 컨테이너 가로 증가(세로는 따로 해줘야함)
+					conimg.style.height = (currHeight) + "px";			// 컨테이너 세로 크기 가로세로 비율에 맞게 적용
 				}
-			}
-
-			function max(){
-				alert("최대크기입니다.");
-			}
-		}
-
-		// 이미지 크기 감소
-		function minus(){
-			var dt = $('#demo').text();
-			var myImg = document.getElementById(dt);			// 이미지
-			var conimg = document.getElementById(dt+"con");		// 이미지와 드롭다운 감싸는 컨테이너
-			var currWidth = myImg.clientWidth;
-			var currHeight;
-			var conWidth = conimg.clientWidth;
-			var subID = dt.substring(0,3);
-
-			if(myImg.parentElement.nodeName == "LABEL"){
-				alert("캔버스 안의 이미지 클릭 후 이용하세요.");
-			} else {
+			} else if(sizingID == "minus"){
 				if(currWidth<=25){
 		            min();
 		        } else {
-					myImg.style.width = (currWidth - 25) + "px";
-					currHeight = myImg.clientHeight;
-					conimg.style.width = (conWidth - 25) + "px";
-					conimg.style.height = (currHeight) + "px";
+					myImg.style.width = (currWidth - 25) + "px";		// -25씩 이미지 가로 감소	(세로는 비율에 맞게 자동적용)
+					currHeight = myImg.clientHeight;					// 컨테이너와 이미지 크기가 같고, 컨테이너 세로크기 적용하기 위해 추출
+					conimg.style.width = (conWidth - 25) + "px";		// -25씩 컨테이너 가로 감소(세로는 따로 해줘야함)
+					conimg.style.height = (currHeight) + "px";			// 컨테이너 세로 크기 가로세로 비율에 맞게 적용
 				}
-			}
+			} else {alert("이미지 크기 증감에서의 오류입니다.");}
 
-	        function min(){
-	        	alert("최소크기입니다.");
-	        }
+			function max(){alert("최대크기입니다.");}
+			function min(){alert("최소크기입니다.");}
 		}
-		
+
     </script>
 
 
