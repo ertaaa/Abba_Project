@@ -314,6 +314,7 @@
 		  position: relative;
 		  cursor:pointer;
 		  z-index: 2;
+		  display: none;
 		}
 
 
@@ -432,10 +433,27 @@
 
 
 	<script>
-		// 시작 시 탭(산)클릭된 상태로 
-		window.onload = function(){
+		// 시작 시 탭(산)클릭된 상태와 가족 수가 0이상 일 때까지 입력 요구
+		window.onload = function start(){
 			var e = document.getElementsByClassName('tablinks');
 			e[0].click(openTab);
+
+			var family_num = prompt("가족 수를 입력하세요","4");
+
+			if(family_num == null){		// 취소 시 탭 닫기
+				alert("창이 닫힙니다.");
+				self.close();
+			}else {
+				family_num = Math.round(Number(family_num));	// 입력한 것을 숫자화 처리
+
+				if( (family_num == 0)||(family_num < 0)||(isNaN(family_num)) ){		// 0이거나 0이하거나 숫자가 아닌 경우 계속 물어봄
+					start();
+				} else {		// 0보다 클 경우
+					alert(family_num);
+				}
+			}
+
+			
 		}
 	</script>
 
@@ -520,7 +538,7 @@
 
 						// canvas에 이미지 추가
 						$('#canvas').append(
-							'<div class="container" id="'+imgId+'con" style="position: absolute;">'
+							'<div class="container" id="'+imgId+'con" style="position: absolute;" onmouseover=mouseover(this); onmouseout=mouseout(this);>'
 								+'<div class="dropdown">'
 									+'<div class="dropbtn" id="'+imgId+'btn" onclick="myFunction(this)" style="display:inline-block;">가족선택</div>'
 									+'<div id="'+imgId+'Dropdown" class="dropdown-content">'
@@ -531,7 +549,7 @@
 										+'<a onclick="family(this)">남동생/여동생</a>'
 									+'</div>'
 								+'</div>'
-								+'<img src="'+src+'" id="'+imgId+'" class="canvas2" onmouseover=mouseover(this); onmouseout=mouseout(this); ondblclick=dblclick(this); style="cursor: move; position:absolute; width:150px; top:0;"/>'
+								+'<img src="'+src+'" id="'+imgId+'" class="canvas2" style="cursor: move; position:absolute; width:150px; top:0;"/>'
 							+'</div>'
 						);
 						// 이미지 자유이동
@@ -617,10 +635,12 @@
 		// canvas에 올려진 이미지 오버인 시 테두리 생성
 		function mouseover(e){
 			e.style.border = "1px dotted #363636";
+			e.firstChild.style.display = "block";
 		}
 		// canvas에 올려진 이미지 오버아웃 시 테두리 지움
 		function mouseout(e){
 			e.style.border = "none";
+			e.firstChild.style.display = "none";
 		}
 		
 		// canvas에 올려진 이미지 클릭 시 클릭된 이미지 id추출
@@ -628,7 +648,10 @@
 			$('#canvas').click(function(e){
 				var id = e.target.getAttribute('id');
 
+				var drid = id.substring(id.length-3, id.length);
+
 				if(id=='canvas'){
+				} else if(drid == "btn"){
 				} else {
 					ttt(id);
 					snackbar(id);
@@ -643,7 +666,11 @@
 		function snackbar(id){
 			var x = document.getElementById("snackbar");
 			var idck = id.substring(0,id.length-4);			// "batImg0" -> bat으로 아이디 추출사용 중/ 한 종류의 이미지가 10개 이상 되면 다른거 적용해야함
+			var drid = id.substring(id.length-3, id.length);	// 드롭다운 클릭했을 때도 동물 종류명 뜨게끔
 
+			if(drid == "btn"){
+				idck = id.substring(0,id.length-7);		// 역시 마찬가지로 한 동물의 이미지가 10개 이상되면 다른거 적용해야함
+			}
 			for(var i=0; i<animal.length; i++){
 				if(idck == animal[i]){x.innerHTML = ani[i]+" 이미지를 클릭하셨습니다."}
 			}
@@ -667,25 +694,8 @@
 			if(myImg.parentElement.nodeName == "LABEL"){
 				alert("캔버스 안의 이미지 클릭 후 이용하세요.");
 			} else {
-				if( (subID == "mou")&& (currWidth>=575) ){
+				if(currWidth>=475){
 					max();
-				} else if( ((subID == "sun")||(subID == "moo"))&&(currWidth>=150) ){
-					max();
-				} else if( ((subID == "riv")||(subID == "roa"))&&(currWidth>=350) ){
-					max();
-				} else if( (subID == "hou")&&(currWidth>=195) ){
-					max();
-				} else if( (subID == "tre")&&(currWidth>=220) ){
-					max();
-				} else if( ((subID == "hum")||(subID == "wel"))&&(currWidth>=180) ){
-					max();
-				} else if( (subID == "sna")&&(currWidth>=145) ){
-					max();
-				} else if( (subID == "sun")||(subID == "moo")||(subID == "hum")||(subID == "wel") ){
-					myImg.style.width = (currWidth + 30) + "px";
-					currHeight = myImg.clientHeight;
-					conimg.style.width = (conWidth + 30) + "px";
-					conimg.style.height = (currHeight) + "px";
 				} else {
 					myImg.style.width = (currWidth + 25) + "px";
 					currHeight = myImg.clientHeight;
@@ -712,23 +722,8 @@
 			if(myImg.parentElement.nodeName == "LABEL"){
 				alert("캔버스 안의 이미지 클릭 후 이용하세요.");
 			} else {
-				if( (subID == "mou")&&(currWidth<=300) ){
+				if(currWidth<=25){
 		            min();
-		        } else if( ((subID == "sun")||(subID == "moo"))&&(currWidth<=60) ){
-		        	min();
-		        } else if( ((subID == "riv")||(subID == "roa"))&&(currWidth<=150) ){
-		        	min();
-		        } else if( (subID == "hou")&&(currWidth<=75) ){
-		        	min();
-		        } else if( ((subID == "tre")||(subID == "sna"))&&(currWidth<=50) ){
-		        	min();
-		        } else if( ((subID == "hum")||(subID == "wel"))&&(currWidth<=60) ){
-		        	min();
-		        } else if( (subID=="sun")||(subID=="moo")||(subID=="hum")||(subID=="wel") ){
-		            myImg.style.width = (currWidth - 30) + "px";
-					currHeight = myImg.clientHeight;
-					conimg.style.width = (conWidth - 30) + "px";
-					conimg.style.height = (currHeight) + "px";
 		        } else {
 					myImg.style.width = (currWidth - 25) + "px";
 					currHeight = myImg.clientHeight;
@@ -747,7 +742,7 @@
 
     <script>
     	var angle = 0;
-    	var an = 0;
+
     	// 이미지 회전
     	function angle_deg(e){
     		var dt = $('#demo').text();
@@ -768,10 +763,8 @@
 
     		if(eID == "right_deg"){
     			angle += 22.5;
-    			an -= 22.5;
     		} else if(eID == "left_deg"){
     			angle -= 22.5;
-    			an += 22.5;
     		} else {
     			alert("회전 중 오류입니다.");
     		}
