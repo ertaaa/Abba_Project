@@ -7,7 +7,7 @@
 	<!-- 이미지 자유이동 및 자유크기 -->
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   	<link rel="stylesheet" href="/resources/demos/style.css">
-	
+	<script src="js/html2canvas.js"></script>
   	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	
 	
@@ -656,7 +656,7 @@
 		// canvas에 올려진 이미지 클릭 시 클릭된 이미지 id추출
 		$(document).ready(function(){
 			$('#canvas').click(function(e){
-				var id = e.target.getAttribute('id');		//batImg0_0 이런식으로 추출
+				var id = e.target.getAttribute('id');					//batImg0_0 이런식으로 추출
 				var drid = id.substring(id.length-3, id.length);		// 가족선택 드롭다운 클릭 시 btn 추출
 
 				if(id=='canvas'){
@@ -774,16 +774,21 @@
     	var child = document.getElementById("canvas").children;
 		var result_Array = [];		// 추출한 데이터 담는 객체배열
 		var result_txt = "";		// 추출된 데이터를 텍스트로 표현하는 변수
-		var com_check = true;
 
     	// 완료 버튼 클릭 시 
     	function complete(){
-    		var con = confirm("완료되었습니까? 신중히 결정해주세요.");
-    		if( (con == true)&&(com_check == true) ){		// 만약 canvas에 각각의 이미지가 다 안들어갔을 경우 con==false; 적용해야함
-    			ComTrue();
-    		} else {
-    			alert("취소");
-    		}
+    		if(result_Array[0] == undefined){
+    			var con = confirm("완료되었습니까? 신중히 결정해주세요.");
+	    		if(con == true){		// 만약 canvas에 각각의 이미지가 다 안들어갔을 경우 con==false; 적용해야함
+	    			ComTrue();
+	    		} else {
+	    			alert("취소");
+	    		}
+    		} else if(result_Array[0] != undefined){
+    			alert("이미 완료되었습니다. 신중히 결정하셨어야죠..");
+    		} else {alert("완료 중 오류입니다.");}
+
+    		
     	}
 
 
@@ -791,9 +796,9 @@
     		// canvas의 left와 top 위치를 구하고
     		var x = document.getElementById('canvas').offsetLeft;
     		var y = document.getElementById('canvas').offsetTop;
-    		var TF = true;	// canvas에 10가지 이미지가 다 들어갔는지
 
-/*			alert('canvasX : '+(x+1)+' / canvasY : '+(y+1));	// cnavas 좌표, +1은 테두리선
+/*			var TF = true;	// canvas에 10가지 이미지가 다 들어갔는지
+			alert('canvasX : '+(x+1)+' / canvasY : '+(y+1));	// cnavas 좌표, +1은 테두리선
     		for(var i=0; i<=9; i++){
     			if(ckArray[i] == undefined){	// 10개 중 이미지가 1개라도 안들어갔을 경우 false 반환
     				TF = false;
@@ -847,17 +852,17 @@
 
     	}
 
-    	// 데이터 추출 한 것에서 위치 값에 따른 정렬처리
+    	// 데이터 추출 한 것에서 위치, 크기 값에 따른 정렬처리
     	function data_sort(e){
     		var sort_id = e.getAttribute('id');
 
     		if(sort_id == "position_sort"){
     			result_Array.sort(function(a,b){
-			    	return a.pos - b.pos;
+			    	return a.pos - b.pos;			// 오름차순 정렬 (top 값이 낮을 수록 높게 있음)
 			    });
     		} else if(sort_id == "size_sort"){
     			result_Array.sort(function(a,b){
-			    	return a.siz - b.siz;
+			    	return b.siz - a.siz;			// 내림차순 정렬 (크기 값이 클 수록 큼)
 			    });
     		} else {alert("데이터 정렬 중 오류입니다.");}
 
