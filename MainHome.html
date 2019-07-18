@@ -368,7 +368,7 @@
 	
 	
 	<footer>
-		<div id="result"></div>
+		<div id="result"><p>가족구성원&nbsp;동물&nbsp;높이&nbsp;가로크기</p><p id="reP"></p></div>
 		<div id="foot">Footer
 			<p id="demo" class="demo" style="visibility: hidden; font-size: xx-small; height: 5px; margin: 0;"></p>
 		</div>
@@ -527,7 +527,7 @@
 				alert("이미지를 선택해주세요.");
 			} else {
 
-				if(-1<ck&&ck<=32){		// 탭 안의 이미지를 선택하고 canvas에 넘겼을 때
+				if(-1<ck&&ck<=animal.length){		// 탭 안의 이미지를 선택하고 canvas에 넘겼을 때
 					var zz = true;
 
 					/*for(var i=0; i<=ckArray.length; i++){		// 추가하려는 이미지 종류가 이미 canvas에 있으면 false
@@ -572,7 +572,7 @@
 						alert("처음 설정한 가족 수를 초과합니다.");
 					}
 				} else {
-					alert("알 수 없는 오류입니다.");
+					alert("이미지 추가기능에서 알 수 없는 오류입니다.");
 				}
 			}
 
@@ -670,7 +670,7 @@
 		// canvas 안에 있는 이미지 클릭 시
 		function snackbar(id){
 			var x = document.getElementById("snackbar");
-			var idck = id.substring(0,id.length-6);			// "batImg0" -> bat으로 아이디 추출사용 중/ 한 종류의 이미지가 10개 이상 되면 다른거 적용해야함
+			var idck = id.substring(0,id.length-6);			// "batImg0_0" -> bat으로 아이디 추출사용 중/ 한 종류의 이미지가 10개 이상 되면 다른거 적용해야함
 			var drid = id.substring(id.length-3, id.length);	// 드롭다운 클릭했을 때도 동물 종류명 뜨게끔
 
 			if(drid == "btn"){
@@ -820,20 +820,54 @@
 		    	}
     		}
 */
-			for(var i=0; i<=9; i++){
-				var can2Child = document.getElementsByClassName('canvas2');
-				var can2_child_id = can2Child[i].getAttribute('id');
 
-				cLeft = can2Child[i].offsetLeft;
-				cTop = can2Child[i].offsetTop;
+			var result_Array = [];
+			//result_Array.push({fam:"가족선택", an:"동물", siz:100, pos:100});
+			var test = "";
+
+			for(var i=0; i<=ckArray.length; i++){
+				var can2Child = document.getElementsByClassName('canvas2');		// 추가된 이미지 객체
+				var can2_child_id = can2Child[i].getAttribute('id');			// 추가된 이미지[i]번째 id
+				var drbtn_id = can2_child_id+"btn";
+				var drtxt = $('#'+drbtn_id).text();
+				var family_name = can2_child_id.substring(0,can2_child_id.length-6);	// 동물 이름 추출
+				var FN;	
+
+				result_Array.push({fam:"가족선택", an:"동물", siz:100, pos:100});
+
+
+				// bat -> 박쥐 이런식으로 한글로 바꿔줌
+				for(var j=0; j<animal.length; j++){
+					if(family_name == animal[j]){FN = ani[j]}
+				}
+
+				cLeft = $('#'+can2_child_id).offset().left;
+				cTop = $('#'+can2_child_id).offset().top;
 				cWidth = can2Child[i].width;
 				cHeight = can2Child[i].height;
 
 				// 객체 배열 TabImg[i].push({});로 탭 순서에 맞게 넣어야함
 
+
+				result_Array[i].fam = drtxt;
+				result_Array[i].an = FN;
+				result_Array[i].pos = (cTop-y-0.5);
+				result_Array[i].siz = cWidth;
+				
+
+				test += result_Array[i].fam+'&nbsp;'+result_Array[i].an+'&nbsp;'+result_Array[i].pos+'&nbsp;'+result_Array[i].siz+'<br>';
+				
+				document.getElementById('reP').innerHTML = test;
+
+				//$('#result').append('<p>'+result_Array[i].fam+'&nbsp;'+result_Array[i].an+'&nbsp;'+result_Array[i].siz+'&nbsp;'+result_Array[i].pos+'</p>');
+
+
 		    	// 이미지의 left와 top위치를 구하고 canvas 좌표값을 빼면 본래 위치를 알 수 있다. // -1 은 테두리선 1px 빼준거
-		    	alert("id: "+can2_child_id+" /left: "+(cLeft-x-1)+"  top: "+(cTop-y-1)+" / width: "+cWidth+"  height: "+cHeight); 
+		    	/*alert("id: "+can2_child_id+" / left: "+(cLeft-x-0.5)+"  top: "+(cTop-y-0.5)+" / width: "+cWidth+"  height: "+cHeight+
+		    		" / 가족구성원 : "+drtxt); */
+
 		    }
+		    //$('#result').append('<p>'+result_string+'</p>');
     	}
     </script>
 </html>
