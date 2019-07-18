@@ -368,7 +368,11 @@
 	
 	
 	<footer>
-		<div id="result"><p>가족구성원&nbsp;동물&nbsp;높이&nbsp;가로크기</p><p id="reP"></p></div>
+		<div id="result" style="padding:10px;">
+			<button type="button" id="position_sort" onclick="data_sort(this)">위치정렬</button>
+			<button type="button" id="size_sort" onclick="data_sort(this)">크기정렬</button>
+			<p>가족구성원&nbsp;동물&nbsp;위치&nbsp;크기</p><p id="reP"></p>
+		</div>
 		<div id="foot">Footer
 			<p id="demo" class="demo" style="visibility: hidden; font-size: xx-small; height: 5px; margin: 0;"></p>
 		</div>
@@ -567,7 +571,7 @@
 							width:w,
 							height:h
 						});
-						k+=1;
+						k+=1;			// 처음 설정한 가족 수에 맞게 count 증가
 					} else if(k>=ckArray.length){
 						alert("처음 설정한 가족 수를 초과합니다.");
 					}
@@ -627,7 +631,7 @@
         	} else {
         		del(subID);
 	        	myImg.remove();
-	        	k-=1;
+	        	k-=1;				// 삭제 시 count 감소
         	}
         });
 
@@ -638,12 +642,12 @@
         	}
         }
 		
-		// canvas에 올려진 이미지 오버인 시 테두리 생성
+		// canvas에 올려진 이미지 오버인 시 테두리 및 가족선택 드롭다운 생성
 		function mouseover(e){
 			e.style.border = "1px dotted #363636";
 			e.firstChild.style.display = "block";
 		}
-		// canvas에 올려진 이미지 오버아웃 시 테두리 지움
+		// canvas에 올려진 이미지 오버아웃 시 테두리 및 가족선택 드롭다운 지움
 		function mouseout(e){
 			e.style.border = "none";
 			e.firstChild.style.display = "none";
@@ -693,8 +697,6 @@
 			var currHeight;
 			var conWidth = conimg.clientWidth;
 			var sizingID = e.getAttribute('id');
-
-
 
 			if(myImg.parentElement.nodeName == "LABEL"){
 				alert("캔버스 안의 이미지 클릭 후 이용하세요.");
@@ -767,21 +769,17 @@
     </script>
 
 
-
-
-
-
-
     <script>
     	var cLeft, cTop, cWidth, cHeight;
     	var child = document.getElementById("canvas").children;
-    	var TabImg = [];
-
+		var result_Array = [];		// 추출한 데이터 담는 객체배열
+		var result_txt = "";		// 추출된 데이터를 텍스트로 표현하는 변수
+		var com_check = true;
 
     	// 완료 버튼 클릭 시 
     	function complete(){
-    		var con = confirm("완료되었습니까?");
-    		if(con == true){		// 만약 canvas에 각각의 이미지가 다 안들어갔을 경우 con==false; 적용해야함
+    		var con = confirm("완료되었습니까? 신중히 결정해주세요.");
+    		if( (con == true)&&(com_check == true) ){		// 만약 canvas에 각각의 이미지가 다 안들어갔을 경우 con==false; 적용해야함
     			ComTrue();
     		} else {
     			alert("취소");
@@ -794,38 +792,22 @@
     		var x = document.getElementById('canvas').offsetLeft;
     		var y = document.getElementById('canvas').offsetTop;
     		var TF = true;	// canvas에 10가지 이미지가 다 들어갔는지
-    		//alert('canvasX : '+(x+1)+' / canvasY : '+(y+1));	// cnavas 좌표, +1은 테두리선
 
-/*
+/*			alert('canvasX : '+(x+1)+' / canvasY : '+(y+1));	// cnavas 좌표, +1은 테두리선
     		for(var i=0; i<=9; i++){
     			if(ckArray[i] == undefined){	// 10개 중 이미지가 1개라도 안들어갔을 경우 false 반환
     				TF = false;
     			}
     		}
-
     		if(TF == false){
     			alert("선택하지 못한 이미지가 있습니다. 확인해주세요.");
     		} else {
-    			for(var i=0; i<=9; i++){
-					var can2Child = document.getElementsByClassName('canvas2');
-					var can2_child_id = can2Child[i].getAttribute('id');
-
-					cLeft = can2Child[i].offsetLeft;
-					cTop = can2Child[i].offsetTop;
-					cWidth = can2Child[i].width;
-					cHeight = can2Child[i].height;
-
-		    		// 이미지의 left와 top위치를 구하고 canvas 좌표값을 빼면 본래 위치를 알 수 있다. // -1 은 테두리선 1px 빼준거
-		    		alert("id:"+can2_child_id+" /left: "+(cLeft-x)+"  top: "+(cTop-y)+" / width: "+cWidth+"  height: "+cHeight); 
-		    	}
     		}
 */
+			//result_txt = "";	// 위치정렬 혹은 크기정렬 후 다시 이미지 재조정을 하고 완료 시 기존 내용 비워주고 다시 새로운 내용으로 대체
+			//result_Array 도 추가로 데이터가 들어가서 초기화 해줘야하는데 remove()나 splice()로 기존 데이터 지워줘야함
 
-			var result_Array = [];
-			//result_Array.push({fam:"가족선택", an:"동물", siz:100, pos:100});
-			var test = "";
-
-			for(var i=0; i<=ckArray.length; i++){
+			for(var i=0; i<ckArray.length; i++){
 				var can2Child = document.getElementsByClassName('canvas2');		// 추가된 이미지 객체
 				var can2_child_id = can2Child[i].getAttribute('id');			// 추가된 이미지[i]번째 id
 				var drbtn_id = can2_child_id+"btn";
@@ -833,7 +815,12 @@
 				var family_name = can2_child_id.substring(0,can2_child_id.length-6);	// 동물 이름 추출
 				var FN;	
 
-				result_Array.push({fam:"가족선택", an:"동물", siz:100, pos:100});
+				result_Array.push({fam:"가족선택", an:"동물", siz:100, pos:100});			// 객체배열요소 생성
+
+				// 가족구성원 선택 안했을 때
+				if(drtxt == "가족선택"){
+					alert("가족선택을 못한 이미지가 있습니다."); break;
+				}
 
 
 				// bat -> 박쥐 이런식으로 한글로 바꿔줌
@@ -846,28 +833,43 @@
 				cWidth = can2Child[i].width;
 				cHeight = can2Child[i].height;
 
-				// 객체 배열 TabImg[i].push({});로 탭 순서에 맞게 넣어야함
-
-
-				result_Array[i].fam = drtxt;
-				result_Array[i].an = FN;
-				result_Array[i].pos = (cTop-y-0.5);
-				result_Array[i].siz = cWidth;
+				result_Array[i].fam = drtxt;					// 가족 구성원
+				result_Array[i].an = FN;						// 동물종류명
+				result_Array[i].pos = (cTop-y-0.5);				// 누가 더 높은지만 체크하라해서 top값만 계산
+				result_Array[i].siz = (cWidth*cHeight)/10;		// 이미지 가로x세로 수가 너무 커서 10으로 나눔 / 비교할 땐 상관없어서 나눔
 				
 
-				test += result_Array[i].fam+'&nbsp;'+result_Array[i].an+'&nbsp;'+result_Array[i].pos+'&nbsp;'+result_Array[i].siz+'<br>';
-				
-				document.getElementById('reP').innerHTML = test;
-
-				//$('#result').append('<p>'+result_Array[i].fam+'&nbsp;'+result_Array[i].an+'&nbsp;'+result_Array[i].siz+'&nbsp;'+result_Array[i].pos+'</p>');
-
-
-		    	// 이미지의 left와 top위치를 구하고 canvas 좌표값을 빼면 본래 위치를 알 수 있다. // -1 은 테두리선 1px 빼준거
-		    	/*alert("id: "+can2_child_id+" / left: "+(cLeft-x-0.5)+"  top: "+(cTop-y-0.5)+" / width: "+cWidth+"  height: "+cHeight+
-		    		" / 가족구성원 : "+drtxt); */
+				// 결과창에 하나의 텍스트형식으로 표현
+				result_txt += result_Array[i].fam+'&nbsp;'+result_Array[i].an+'&nbsp;'+result_Array[i].pos+'&nbsp;'+result_Array[i].siz+'<br>';
+				document.getElementById('reP').innerHTML = result_txt;
 
 		    }
-		    //$('#result').append('<p>'+result_string+'</p>');
+
     	}
+
+    	// 데이터 추출 한 것에서 위치 값에 따른 정렬처리
+    	function data_sort(e){
+    		var sort_id = e.getAttribute('id');
+
+    		if(sort_id == "position_sort"){
+    			result_Array.sort(function(a,b){
+			    	return a.pos - b.pos;
+			    });
+    		} else if(sort_id == "size_sort"){
+    			result_Array.sort(function(a,b){
+			    	return a.siz - b.siz;
+			    });
+    		} else {alert("데이터 정렬 중 오류입니다.");}
+
+		    result_txt = "";
+
+		    for(var i=0; i<ckArray.length; i++){
+		    	result_txt += result_Array[i].fam+'&nbsp;'+result_Array[i].an+'&nbsp;'+result_Array[i].pos+'&nbsp;'+result_Array[i].siz+'<br>';
+				
+				document.getElementById('reP').innerHTML = result_txt;
+		    }
+    	}
+
+
     </script>
 </html>
